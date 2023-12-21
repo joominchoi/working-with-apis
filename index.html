@@ -2,22 +2,43 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giphy Image Viewer</title>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <img src="#" />
+    <img id="giphy-image" alt="Giphy Image" />
+    <button id="refresh-button">Refresh</button>
+
     <script>
-      const img = document.querySelector("img");
-      fetch(
-        "https://api.giphy.com/v1/gifs/translate?api_key=g97TWREKrgVP2huYIiTLBEOfwDqhEQ3F&s=cats",
-        { mode: "cors" }
-      )
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (response) {
-          img.src = response.data.images.original.url;
-        });
+      const img = document.getElementById("giphy-image");
+      const refreshButton = document.getElementById("refresh-button");
+
+      // Initial fetch when the page loads
+      fetchGiphyImage();
+
+      // Function to fetch and set a new Giphy image
+      function fetchGiphyImage() {
+        fetchGiphyData()
+          .then((response) => response.json())
+          .then((response) => {
+            img.src = response.data.images.original.url;
+          })
+          .catch((error) =>
+            console.error("Error fetching Giphy image:", error)
+          );
+      }
+
+      // Function to fetch Giphy data
+      function fetchGiphyData() {
+        return fetch(
+          "https://api.giphy.com/v1/gifs/translate?api_key=g97TWREKrgVP2huYIiTLBEOfwDqhEQ3F&s=cats",
+          { mode: "cors" }
+        );
+      }
+
+      // Event listener for the refresh button
+      refreshButton.addEventListener("click", fetchGiphyImage);
     </script>
   </body>
 </html>
