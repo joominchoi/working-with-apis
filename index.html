@@ -4,22 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Giphy Image Viewer</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <label for="search-input">Search for a GIF</label>
+    <input type="text" id="search-input" placeholder="Enter search term" />
+    <div class="buttons">
+      <button id="search-button">Search</button>
+      <button id="refresh-button">Refresh</button>
+    </div>
     <img id="giphy-image" alt="Giphy Image" />
-    <button id="refresh-button">Refresh</button>
 
     <script>
       const img = document.getElementById("giphy-image");
       const refreshButton = document.getElementById("refresh-button");
+      const searchInput = document.getElementById("search-input");
+      const searchButton = document.getElementById("search-button");
 
       // Initial fetch when the page loads
       fetchGiphyImage();
 
       // Function to fetch and set a new Giphy image
       function fetchGiphyImage() {
-        fetchGiphyData()
+        const searchTerm = searchInput.value || "cats";
+
+        fetchGiphyData(searchTerm)
           .then((response) => response.json())
           .then((response) => {
             img.src = response.data.images.original.url;
@@ -30,12 +39,15 @@
       }
 
       // Function to fetch Giphy data
-      function fetchGiphyData() {
+      function fetchGiphyData(searchTerm) {
         return fetch(
-          "https://api.giphy.com/v1/gifs/translate?api_key=g97TWREKrgVP2huYIiTLBEOfwDqhEQ3F&s=cats",
+          `https://api.giphy.com/v1/gifs/translate?api_key=g97TWREKrgVP2huYIiTLBEOfwDqhEQ3F&s=${searchTerm}`,
           { mode: "cors" }
         );
       }
+
+      // Event listener for the search input
+      searchButton.addEventListener("click", fetchGiphyImage);
 
       // Event listener for the refresh button
       refreshButton.addEventListener("click", fetchGiphyImage);
